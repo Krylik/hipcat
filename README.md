@@ -44,6 +44,27 @@ it as a parameter:
 my-long-task && hipcat 'Notifications' -m "The long-running task is done"
 ```
 
+The message can also be entered interactively:
+
+```bash
+hipcat 'Notifications'
+Message: Some interactive message text here
+```
+
+If you send messages to a particular room more frequently than others, you
+can also set a default room that will be used if the room is omitted. Add
+a 'default_room' entry to your config:
+
+```ini
+[hipchat]
+default_room = Room Name Here
+```
+
+You can then send messages to your default room by omitting the room name entirely:
+
+```bash
+hipcat -m "Hello default room!"
+```
 
 ## Contributing to hipcat
 

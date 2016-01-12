@@ -62,6 +62,19 @@ You must provide an 'access_token' in your configuration's 'hipchat' section.
         return token
 
     @property
+    def default_room(self):
+        room = self.config.get('hipchat', 'default_room', fallback=None)
+        if not room:
+            raise ConfigurationError(
+"""
+Configuration error!
+
+You must provide a 'default_room' in your configuration's 'hipchat' section to omit the 'room' argument.
+"""
+            )
+        return room
+
+    @property
     def base_url(self):
         return self.config.get('hipchat', 'base_url', fallback='https://www.hipchat.com').rstrip('/')
 
@@ -69,17 +82,16 @@ You must provide an 'access_token' in your configuration's 'hipchat' section.
 
 @click.command(help=__doc__)
 @click.version_option()
-@click.argument('room')
+@click.argument('room', nargs=-1)
 @click.option('-m', '--message', help='A message to post. Uses STDIN if not provided.')
 def main(room, message):
     try:
         config = Config().load()
-
         url = '{config.base_url}/v2/room/{room_id_or_name}/message'.format(
             config=config,
-            room_id_or_name=room,
+            room_id_or_name=room[0] if room else config.default_room,
         )
-        message = message or sys.stdin.read()
+        message = message or sys.stdin.read() if not sys.stdin.isatty() else click.prompt('Message')
         if message:
             response = requests.post(
                 url,
