@@ -66,6 +66,10 @@ You can then send messages to your default room by omitting the room name entire
 hipcat -m "Hello default room!"
 ```
 
+If the text you are sending to HipChat is formatted, use the `-q` flag to
+prefix with `/quote`, and if it should be syntax-highlighted code, use the
+`-c` flag to prefix with `/code`.
+
 ## Contributing to hipcat
 
 You want to contribute? Love you!
@@ -82,7 +86,7 @@ There's some stuff you should know:
 
 ## To Do
 
-* Add `--quote` option for pre-pending the message with `/quote`
-* Add a `--code` option for pre-pending the message with `/code`
 * Add a flag to send the output to HipChat line-by-line rather than at the end.
+* Allow message posting to individuals as well as rooms.
+* Allow uploading content as a file rather than inline text.
 * Err... post a GitHub issue if you want to see a new feature, and we'll talk!

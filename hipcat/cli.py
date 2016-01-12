@@ -84,7 +84,9 @@ You must provide a 'default_room' in your configuration's 'hipchat' section to o
 @click.version_option()
 @click.argument('room', nargs=-1)
 @click.option('-m', '--message', help='A message to post. Uses STDIN if not provided.')
-def main(room, message):
+@click.option('-q', '--quote', help='Prefix the message with /quote for formatting.', is_flag=True)
+@click.option('-c', '--code', help='Prefix the message with /code for formatting.', is_flag=True)
+def main(room, message, quote, code):
     try:
         config = Config().load()
         url = '{config.base_url}/v2/room/{room_id_or_name}/message'.format(
@@ -93,6 +95,11 @@ def main(room, message):
         )
         message = message or sys.stdin.read() if not sys.stdin.isatty() else click.prompt('Message')
         if message:
+            if quote or code:
+                message = '{formatter} {message}'.format(
+                    formatter='/quote' if quote else '/code',
+                    message=message
+                )
             response = requests.post(
                 url,
                 headers={
